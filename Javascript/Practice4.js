@@ -92,3 +92,23 @@ Available: ${book.avail_status}
         }
     }
 
+    // ==========================================
+    // TASK 6: DISPLAY ALL BOOKS
+    // ==========================================
+
+    displayBooks() {
+
+        console.log("\n--- LIBRARY BOOKS ---");
+
+        // Loop through every book
+        for (const book of this.books) {
+
+            console.log(`
+Title: ${book.title}
+Author: ${book.author}
+Year: ${book.pub_year}
+Available: ${book.avail_status}
+            `);
+        }
+    }
+
