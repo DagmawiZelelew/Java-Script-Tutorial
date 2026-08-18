@@ -56,3 +56,39 @@ class Library {
         this.books = [];
     }
 
+
+
+    
+    // ==========================================
+    // TASK 5: ADD A BOOK
+    // ==========================================
+
+    addBook(book) {
+
+        // Add the book to the books array
+        this.books.push(book);
+
+        console.log(`${book.title} was added to the library.`);
+    }
+
+
+    // ==========================================
+    // TASK 6: DISPLAY ALL BOOKS
+    // ==========================================
+
+    displayBooks() {
+
+        console.log("\n--- LIBRARY BOOKS ---");
+
+        // Loop through every book
+        for (const book of this.books) {
+
+            console.log(`
+Title: ${book.title}
+Author: ${book.author}
+Year: ${book.pub_year}
+Available: ${book.avail_status}
+            `);
+        }
+    }
+
