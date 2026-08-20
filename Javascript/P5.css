@@ -1,0 +1,28 @@
+body{
+    background-image: url(photo-1543373014-cfe4f4bc1cdf.avif);
+    background-position: center;
+    background-repeat: no-repeat;
+    margin:0;
+    background-size: cover;
+    background-attachment: fixed;
+}
+
+
+#block-container{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height:100vh;
+}
+#clock{
+    font-family: monospace;
+    font-size: 40px;
+    backdrop-filter: blur(5px);
+    background-color:rgba(102, 93, 93, 0.288);
+    width: 100%;
+    font-weight:800;
+    text-align:center;
+    color:white;
+    padding: 15px;
+
+}
