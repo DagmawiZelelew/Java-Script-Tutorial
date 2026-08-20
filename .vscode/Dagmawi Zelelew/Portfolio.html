@@ -1,0 +1,991 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Dagmawi Zelelew — Portfolio</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:           #F7F5F1;
+      --surface:      #FFFFFF;
+      --green:        #2A6741;
+      --green-hover:  #1F5233;
+      --green-tint:   #EEF6F1;
+      --amber:        #E9934A;
+      --amber-tint:   #FEF4EC;
+      --dark:         #1C1917;
+      --text:         #44403C;
+      --muted:        #A8A29E;
+      --border:       rgba(0,0,0,0.08);
+      --border-strong:rgba(0,0,0,0.14);
+      --shadow-sm:    0 1px 3px rgba(0,0,0,0.07), 0 1px 2px rgba(0,0,0,0.05);
+      --shadow-md:    0 4px 20px rgba(0,0,0,0.09);
+      --radius:       12px;
+      --radius-sm:    8px;
+      --font-display: 'Playfair Display', Georgia, serif;
+      --font-body:    'Inter', sans-serif;
+      --font-mono:    'JetBrains Mono', monospace;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: var(--font-body);
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.7;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ── NAV ──────────────────────────────────── */
+    .nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      padding: 0 5%;
+      background: rgba(247,245,241,0.88);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border-bottom: .5px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 64px;
+    }
+    .nav-logo {
+      font-family: var(--font-display);
+      font-size: 1.15rem;
+      color: var(--dark);
+      text-decoration: none;
+      letter-spacing: -0.01em;
+    }
+    .nav-logo span { color: var(--green); }
+    .nav-links { display: flex; gap: 2rem; list-style: none; }
+    .nav-links a {
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--text);
+      text-decoration: none;
+      letter-spacing: 0.02em;
+      transition: color .15s;
+    }
+    .nav-links a:hover { color: var(--green); }
+
+    /* ── HERO ─────────────────────────────────── */
+    .hero {
+      min-height: 100vh;
+      display: grid;
+      grid-template-columns: 1.1fr 0.9fr;
+      align-items: center;
+      padding: 64px 5% 0;
+      position: relative;
+      overflow: hidden;
+      gap: 3rem;
+    }
+
+    /* Decorative rings */
+    .hero-ring {
+      position: absolute;
+      width: 520px; height: 520px;
+      border-radius: 50%;
+      border: 64px solid var(--green-tint);
+      top: -100px; right: -140px;
+      pointer-events: none;
+    }
+    .hero-ring-2 {
+      position: absolute;
+      width: 240px; height: 240px;
+      border-radius: 50%;
+      border: 28px solid var(--amber-tint);
+      bottom: 80px; right: 60px;
+      pointer-events: none;
+    }
+    .hero-dot {
+      position: absolute;
+      width: 10px; height: 10px;
+      border-radius: 50%;
+      background: var(--amber);
+      top: 190px; right: 290px;
+      pointer-events: none;
+    }
+
+    .hero-content { position: relative; z-index: 1; }
+
+    .hero-eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--green);
+      margin-bottom: 1.25rem;
+    }
+    .hero-eyebrow::before {
+      content: '';
+      width: 24px; height: 2px;
+      background: var(--green);
+      border-radius: 2px;
+    }
+
+    .hero-name {
+      font-family: var(--font-display);
+      font-size: clamp(2.8rem, 5vw, 4.2rem);
+      font-weight: 700;
+      color: var(--dark);
+      line-height: 1.08;
+      letter-spacing: -0.025em;
+      margin-bottom: .75rem;
+    }
+    .hero-name em { font-style: italic; color: var(--green); }
+
+    .hero-roles {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-bottom: 1.5rem;
+    }
+    .role-chip {
+      font-size: 12px;
+      font-weight: 500;
+      padding: 4px 12px;
+      border-radius: 20px;
+      border: 1px solid transparent;
+    }
+    .role-chip.green { background: var(--green-tint); color: var(--green); border-color: rgba(42,103,65,0.2); }
+    .role-chip.amber { background: var(--amber-tint); color: #B45309; border-color: rgba(233,147,74,0.3); }
+
+    .hero-bio {
+      font-size: 15px;
+      line-height: 1.8;
+      color: var(--text);
+      max-width: 480px;
+      margin-bottom: 2rem;
+    }
+
+    .hero-btns { display: flex; gap: 10px; flex-wrap: wrap; }
+
+    /* ── BUTTONS ──────────────────────────────── */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      padding: 10px 22px;
+      border-radius: var(--radius-sm);
+      font-size: 14px;
+      font-weight: 500;
+      font-family: var(--font-body);
+      cursor: pointer;
+      text-decoration: none;
+      transition: all .2s ease;
+      border: 1.5px solid transparent;
+    }
+    .btn-primary { background: var(--green); color: #fff; border-color: var(--green); }
+    .btn-primary:hover { background: var(--green-hover); border-color: var(--green-hover); transform: translateY(-1px); box-shadow: 0 6px 16px rgba(42,103,65,0.28); }
+    .btn-outline { background: transparent; color: var(--dark); border-color: var(--border-strong); }
+    .btn-outline:hover { background: var(--surface); transform: translateY(-1px); box-shadow: var(--shadow-sm); }
+
+    /* ── HERO CARD (right side) ───────────────── */
+    .hero-visual {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    .hero-card {
+      background: var(--surface);
+      border-radius: 20px;
+      padding: 2rem;
+      box-shadow: var(--shadow-md);
+      border: .5px solid var(--border);
+      width: 300px;
+    }
+    .hero-card-avatar {
+      width: 72px; height: 72px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--green) 0%, #5DBE8A 100%);
+      display: flex; align-items: center; justify-content: center;
+      font-family: var(--font-display);
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: 1rem;
+    }
+    .hero-card h3 { font-family: var(--font-display); font-size: 1rem; font-weight: 700; color: var(--dark); margin-bottom: .2rem; }
+    .hero-card p  { font-size: 12px; color: var(--muted); margin-bottom: 1.25rem; }
+    .hero-card-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+    .hstat { background: var(--bg); border-radius: 8px; padding: .6rem .75rem; }
+    .hstat strong { display: block; font-size: 20px; font-weight: 600; color: var(--dark); font-family: var(--font-display); }
+    .hstat span   { font-size: 11px; color: var(--muted); }
+    .hero-card-tags { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 1rem; }
+    .htag { font-family: var(--font-mono); font-size: 10px; background: var(--green-tint); color: var(--green); padding: 3px 8px; border-radius: 4px; }
+
+    /* ── SECTION BASE ─────────────────────────── */
+    section { padding: 88px 5%; }
+    .section-inner { max-width: 1020px; margin: 0 auto; }
+
+    .section-label {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--green);
+      margin-bottom: 1rem;
+    }
+    .section-label::after { content: ''; width: 36px; height: 1px; background: var(--green); opacity: .4; }
+
+    .section-title {
+      font-family: var(--font-display);
+      font-size: clamp(1.75rem, 3vw, 2.25rem);
+      font-weight: 700;
+      color: var(--dark);
+      line-height: 1.2;
+      margin-bottom: 1rem;
+      letter-spacing: -0.02em;
+    }
+
+    /* ── ABOUT ────────────────────────────────── */
+    .about-section { background: var(--surface); }
+    .about-grid {
+      display: grid;
+      grid-template-columns: 240px 1fr;
+      gap: 4rem;
+      align-items: flex-start;
+    }
+    .about-initials {
+      width: 100px; height: 100px;
+      border-radius: 18px;
+      background: linear-gradient(135deg, var(--green) 0%, #5DBE8A 100%);
+      display: flex; align-items: center; justify-content: center;
+      font-family: var(--font-display);
+      font-size: 2.5rem;
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: 1.5rem;
+    }
+    .about-quick { list-style: none; display: grid; gap: .75rem; }
+    .about-quick li { display: flex; gap: 10px; font-size: 13px; color: var(--text); align-items: flex-start; }
+    .about-quick li .icon { flex-shrink: 0; }
+
+    .about-text p { font-size: 15px; line-height: 1.85; color: var(--text); margin-bottom: 1.25rem; }
+    .about-text p:last-child { margin-bottom: 0; }
+    .about-text strong { color: var(--dark); font-weight: 600; }
+
+    /* ── SKILLS ───────────────────────────────── */
+    .skills-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 1.25rem;
+      margin-top: 2.5rem;
+    }
+    .skill-cat {
+      background: var(--surface);
+      border: .5px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.5rem;
+      box-shadow: var(--shadow-sm);
+    }
+    .skill-cat-title {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: .9rem;
+      display: flex;
+      align-items: center;
+      gap: 7px;
+    }
+    .skill-cat-title::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: var(--green); flex-shrink: 0; }
+    .skill-pills { display: flex; flex-wrap: wrap; gap: 6px; }
+    .pill {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      padding: 5px 11px;
+      border-radius: 6px;
+      background: var(--bg);
+      border: 1px solid var(--border-strong);
+      color: var(--text);
+    }
+    .pill.green { background: var(--green-tint); border-color: rgba(42,103,65,0.15); color: var(--green); }
+    .pill.amber { background: var(--amber-tint); border-color: rgba(233,147,74,0.2); color: #B45309; }
+
+    /* ── PROJECTS ─────────────────────────────── */
+    .projects-section { background: var(--surface); }
+    .projects-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 1.5rem;
+      margin-top: 2.5rem;
+    }
+    .project-card {
+      background: var(--bg);
+      border: .5px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+      transition: box-shadow .2s ease, transform .2s ease;
+    }
+    .project-card:hover { box-shadow: var(--shadow-md); transform: translateY(-3px); }
+    .project-thumb {
+      height: 148px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 2.75rem;
+      background: linear-gradient(135deg, var(--green-tint) 0%, var(--amber-tint) 100%);
+      position: relative;
+    }
+    .project-badge {
+      position: absolute;
+      top: 12px; right: 12px;
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+      padding: 3px 9px;
+      border-radius: 4px;
+      background: var(--amber);
+      color: #fff;
+    }
+    .project-badge.live { background: var(--green); }
+    .project-body { padding: 1.25rem 1.5rem; }
+    .project-body h3 { font-family: var(--font-display); font-size: 1rem; font-weight: 700; color: var(--dark); margin-bottom: .35rem; }
+    .project-body p  { font-size: 13px; color: var(--text); line-height: 1.65; margin-bottom: 1rem; }
+    .project-stack { display: flex; flex-wrap: wrap; gap: 4px; margin-bottom: .9rem; }
+    .project-stack span {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      color: var(--muted);
+      padding: 2px 7px;
+      border-radius: 4px;
+    }
+    .project-links { display: flex; gap: 12px; }
+    .project-links a {
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--green);
+      text-decoration: none;
+      display: flex; align-items: center; gap: 4px;
+      transition: opacity .15s;
+    }
+    .project-links a:hover { opacity: .7; }
+
+    /* ── TIMELINE (Education) ─────────────────── */
+    .timeline { display: grid; gap: 1.5rem; margin-top: 2.5rem; position: relative; }
+    .timeline::before {
+      content: '';
+      position: absolute;
+      left: 23px; top: 0; bottom: 0;
+      width: 1px;
+      background: var(--border-strong);
+    }
+    .timeline-item { display: grid; grid-template-columns: 48px 1fr; gap: 1.5rem; align-items: flex-start; }
+    .timeline-icon {
+      width: 48px; height: 48px;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.25rem;
+      flex-shrink: 0;
+      position: relative;
+      z-index: 1;
+      border: 2px solid var(--bg);
+    }
+    .timeline-icon.edu   { background: var(--green-tint); }
+    .timeline-icon.award { background: var(--amber-tint); }
+    .timeline-content {
+      background: var(--surface);
+      border: .5px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.25rem 1.5rem;
+      box-shadow: var(--shadow-sm);
+    }
+    .timeline-content h3 { font-family: var(--font-display); font-size: 1rem; font-weight: 700; color: var(--dark); margin-bottom: .2rem; }
+    .timeline-content .sub { font-size: 13px; color: var(--green); font-weight: 500; margin-bottom: .5rem; }
+    .timeline-content p { font-size: 13px; color: var(--text); line-height: 1.65; }
+    .timeline-year { display: inline-block; font-size: 11px; font-weight: 500; color: var(--muted); margin-top: .6rem; font-family: var(--font-mono); }
+
+    /* ── CONTACT ──────────────────────────────── */
+    .contact-section { background: var(--dark); }
+    .contact-section .section-label { color: #86EFAC; }
+    .contact-section .section-label::after { background: #86EFAC; }
+    .contact-section .section-title { color: #FAFAF8; }
+    .contact-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; margin-top: 2.5rem; align-items: start; }
+    .contact-info p { font-size: 15px; color: #A8A29E; line-height: 1.8; margin-bottom: 1.75rem; }
+    .contact-links { display: grid; gap: .9rem; }
+    .contact-link {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 14px;
+      color: #E7E5E4;
+      text-decoration: none;
+      transition: color .15s;
+    }
+    .contact-link:hover { color: #86EFAC; }
+    .contact-link-icon {
+      width: 38px; height: 38px;
+      border-radius: 8px;
+      background: rgba(255,255,255,.07);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 16px;
+      flex-shrink: 0;
+      font-family: var(--font-mono);
+      font-size: 13px;
+      color: #86EFAC;
+    }
+
+    /* Contact form */
+    .cform { display: grid; gap: .8rem; }
+    .cform input,
+    .cform textarea {
+      background: rgba(255,255,255,.06);
+      border: 1px solid rgba(255,255,255,.11);
+      color: #FAFAF8;
+      border-radius: var(--radius-sm);
+      font-size: 14px;
+      padding: 11px 14px;
+      font-family: var(--font-body);
+      width: 100%;
+      transition: border-color .15s;
+    }
+    .cform input::placeholder,
+    .cform textarea::placeholder { color: rgba(255,255,255,.28); }
+    .cform input:focus,
+    .cform textarea:focus { outline: none; border-color: #86EFAC; }
+    .cform textarea { resize: vertical; min-height: 120px; }
+    .btn-send {
+      background: var(--green);
+      color: #fff;
+      border: none;
+      padding: 11px 24px;
+      border-radius: var(--radius-sm);
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      font-family: var(--font-body);
+      align-self: flex-start;
+      transition: background .2s, transform .15s;
+    }
+    .btn-send:hover { background: var(--green-hover); transform: translateY(-1px); }
+    .form-success {
+      display: none;
+      font-size: 13px;
+      color: #86EFAC;
+      padding: 10px 14px;
+      background: rgba(134,239,172,.08);
+      border-radius: var(--radius-sm);
+      border: 1px solid rgba(134,239,172,.18);
+    }
+
+    /* ── FOOTER ───────────────────────────────── */
+    footer {
+      background: #111110;
+      padding: 1.5rem 5%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: .75rem;
+    }
+    footer p { font-size: 12px; color: #78716C; }
+    .footer-links { display: flex; gap: 1.5rem; }
+    .footer-links a { color: #78716C; text-decoration: none; font-size: 12px; transition: color .15s; }
+    .footer-links a:hover { color: #D4D0CA; }
+
+    /* ── RESPONSIVE ───────────────────────────── */
+    @media (max-width: 768px) {
+      .hero { grid-template-columns: 1fr; padding-top: 88px; padding-bottom: 3rem; }
+      .hero-visual { display: none; }
+      .about-grid { grid-template-columns: 1fr; gap: 2rem; }
+      .contact-grid { grid-template-columns: 1fr; gap: 2.5rem; }
+      .nav-links { display: none; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { transition: none !important; animation: none !important; }
+    }
+    /* ====== Smooth Fade Animations ====== */
+
+.hero-content,
+.hero-visual{
+    animation: fadeUp 1s ease forwards;
+}
+
+.about-section,
+#skills,
+.projects-section,
+#education,
+.contact-section{
+    animation: fadeIn 1.2s ease;
+}
+
+/* Floating Hero Card */
+
+.hero-card{
+    animation: floating 5s ease-in-out infinite;
+}
+
+/* Floating Background Shapes */
+
+.hero-ring{
+    animation: rotateSlow 40s linear infinite;
+}
+
+.hero-ring-2{
+    animation: floating 8s ease-in-out infinite;
+}
+
+.hero-dot{
+    animation: pulse 2s infinite;
+}
+
+/* Buttons */
+
+.btn{
+    transition: all .35s ease;
+}
+
+.btn:hover{
+    transform: translateY(-6px) scale(1.05);
+}
+
+/* Project Cards */
+
+.project-card{
+    transition:.35s;
+}
+
+.project-card:hover{
+    transform:translateY(-10px) scale(1.03);
+}
+
+/* Skill Cards */
+
+.skill-cat{
+    transition:.35s;
+}
+
+.skill-cat:hover{
+    transform:translateY(-8px);
+}
+
+/* Timeline */
+
+.timeline-content{
+    transition:.3s;
+}
+
+.timeline-content:hover{
+    transform:translateX(10px);
+}
+
+/* Navigation */
+
+.nav{
+    transition:.4s;
+}
+
+.nav:hover{
+    background:rgba(247,245,241,.95);
+}
+
+/* ===== Keyframes ===== */
+
+@keyframes fadeUp{
+
+from{
+opacity:0;
+transform:translateY(60px);
+}
+
+to{
+opacity:1;
+transform:translateY(0);
+}
+
+}
+
+@keyframes fadeIn{
+
+from{
+opacity:0;
+}
+
+to{
+opacity:1;
+}
+
+}
+
+@keyframes floating{
+
+0%{
+transform:translateY(0px);
+}
+
+50%{
+transform:translateY(-18px);
+}
+
+100%{
+transform:translateY(0px);
+}
+
+}
+
+@keyframes pulse{
+
+0%{
+transform:scale(1);
+opacity:1;
+}
+
+50%{
+transform:scale(1.8);
+opacity:.4;
+}
+
+100%{
+transform:scale(1);
+opacity:1;
+}
+
+}
+
+@keyframes rotateSlow{
+
+from{
+transform:rotate(0deg);
+}
+
+to{
+transform:rotate(360deg);
+}
+
+}
+  </style>
+</head>
+<body>
+
+<!-- ── NAV ──────────────────────────────────────── -->
+<nav class="nav">
+  <a class="nav-logo" href="#home">Dagmawi<span>.</span></a>
+  <ul class="nav-links">
+    <li><a href="#about">About</a></li>
+    <li><a href="#skills">Skills</a></li>
+    <li><a href="#projects">Projects</a></li>
+    <li><a href="#education">Education</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+</nav>
+
+<!-- ── HERO ─────────────────────────────────────── -->
+<section class="hero" id="home">
+  <!-- Decorative background shapes -->
+  <div class="hero-ring"></div>
+  <div class="hero-ring-2"></div>
+  <div class="hero-dot"></div>
+
+  <div class="hero-content">
+    <div class="hero-eyebrow">Open to opportunities</div>
+    <h1 class="hero-name">Dagmawi<br/>Zelelew</h1>
+    <div class="hero-roles">
+      <span class="role-chip green">Frontend Developer</span>
+      <span class="role-chip green">UI/UX Designer</span>
+      <span class="role-chip amber">AI Enthusiast</span>
+      <span class="role-chip amber">Cybersecurity</span>
+    </div>
+    <p class="hero-bio">
+      Aspiring web developer passionate about creating modern, user-friendly websites.
+      Currently studying at Adama Science &amp; Technology University — turning ideas into
+      clean, responsive web experiences.
+    </p>
+    <div class="hero-btns">
+      <a href="https://github.com/DagmawiZelelew" target="_blank" rel="noopener" class="btn btn-primary">
+        ⌥ GitHub
+      </a>
+      <a href="https://www.linkedin.com/in/dagmawi-zelelew" target="_blank" rel="noopener" class="btn btn-outline">
+        in LinkedIn
+      </a>
+      <a href="#contact" class="btn btn-outline">Say hello →</a>
+    </div>
+  </div>
+
+  <div class="hero-visual">
+    <div class="hero-card">
+      <div class="hero-card-avatar">DZ</div>
+      <h3>Dagmawi Zelelew Argaw</h3>
+      <p>Adama Science &amp; Technology University</p>
+      <div class="hero-card-stats">
+        <div class="hstat"><strong>5+</strong><span>Languages</span></div>
+        <div class="hstat"><strong>🏆</strong><span>Awarded</span></div>
+        <div class="hstat"><strong>4</strong><span>Interests</span></div>
+        <div class="hstat"><strong>∞</strong><span>Learning</span></div>
+      </div>
+      <div class="hero-card-tags">
+        <span class="htag">HTML</span>
+        <span class="htag">CSS</span>
+        <span class="htag">Python</span>
+        <span class="htag">C++</span>
+        <span class="htag">Git</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── ABOUT ─────────────────────────────────────── -->
+<section class="about-section" id="about">
+  <div class="section-inner">
+    <div class="about-grid">
+      <div class="about-aside">
+        <div class="about-initials">DZ</div>
+        <ul class="about-quick">
+          <li><span class="icon">📍</span><span>Addis Ababa, Ethiopia</span></li>
+          <li><span class="icon">🎓</span><span>ASTU — Software Engineering</span></li>
+          <li><span class="icon">✉️</span><span>dagipeacu@gmail.com</span></li>
+          <li><span class="icon">💡</span><span>Frontend · UI/UX · AI · Security</span></li>
+        </ul>
+      </div>
+      <div class="about-text">
+        <div class="section-label">About me</div>
+        <h2 class="section-title">Building things that make an impact</h2>
+        <p>
+          Hi, I'm <strong>Dagmawi Zelelew Argaw</strong> — an aspiring web developer and UI/UX designer
+          with a strong passion for creating modern, user-friendly websites. I enjoy learning new
+          technologies, sharpening my problem-solving skills, and turning ideas into clean,
+          responsive web experiences.
+        </p>
+        <p>
+          I'm committed to continuous growth and excited to build projects that make a real difference.
+          Beyond the web, I'm deeply curious about <strong>AI engineering</strong> and
+          <strong>cybersecurity</strong> — two fields I believe will define the next era of software.
+        </p>
+        <p>
+          Currently studying at <strong>Adama Science and Technology University</strong>, where I've been
+          recognized for outstanding academic performance with <strong>Great Distinction</strong>.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── SKILLS ─────────────────────────────────────── -->
+<section id="skills">
+  <div class="section-inner">
+    <div class="section-label">What I know</div>
+    <h2 class="section-title">Skills &amp; Technologies</h2>
+    <div class="skills-grid">
+      <div class="skill-cat">
+        <div class="skill-cat-title">Languages</div>
+        <div class="skill-pills">
+          <span class="pill green">HTML5</span>
+          <span class="pill green">CSS3</span>
+          <span class="pill green">Python</span>
+          <span class="pill green">C++</span>
+        </div>
+      </div>
+      <div class="skill-cat">
+        <div class="skill-cat-title">Tools &amp; Version Control</div>
+        <div class="skill-pills">
+          <span class="pill amber">Git</span>
+          <span class="pill amber">GitHub</span>
+          <span class="pill amber">VS Code</span>
+        </div>
+      </div>
+      <div class="skill-cat">
+        <div class="skill-cat-title">Design &amp; UX</div>
+        <div class="skill-pills">
+          <span class="pill">UI Design</span>
+          <span class="pill">UX Research</span>
+          <span class="pill">Responsive Design</span>
+          <span class="pill">Wireframing</span>
+        </div>
+      </div>
+      <div class="skill-cat">
+        <div class="skill-cat-title">Interests &amp; Learning</div>
+        <div class="skill-pills">
+          <span class="pill">Cybersecurity</span>
+          <span class="pill">AI / ML</span>
+          <span class="pill">Full-Stack Dev</span>
+          <span class="pill">Problem Solving</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── PROJECTS ────────────────────────────────────── -->
+<section class="projects-section" id="projects">
+  <div class="section-inner">
+    <div class="section-label">My work</div>
+    <h2 class="section-title">Projects</h2>
+    <div class="projects-grid">
+
+      <div class="project-card">
+        <div class="project-thumb">🌐
+          <span class="project-badge live"></span>
+        </div>
+        <div class="project-body">
+          <h3>Zenbil(UI/UX Design)</h3>
+          <p>Designed an Ecommerce app, with outstanding visuals and unique features</p>
+          <div class="project-stack">
+            <span>Figma</span><span>Google-stitch</span>
+          </div>
+        </div>
+      </div>
+      <div class="project-card">
+        <div class="project-thumb">🛒
+        </div>
+        <div class="project-body">
+          <h3>Ethio Lightning Merchant Checkout</h3>
+          <p>Ethio Lightning Checkout is a merchant payment platform that enables businesses to accept Lightning payments in satoshis (sats) while pricing products in Ethiopian Birr (ETB). It provides instant payment confirmation, digital receipts, sales history, and a seamless checkout experience powered by the Lightning Network and Bitcoin Core.</p>
+          <div class="project-stack">
+           <div class="tech-stack">
+  <span class="tech"> Next.js 15</span>
+  <span class="tech"> TypeScript</span>
+  <span class="tech">LND gRPC</span>
+  <span class="tech">Bitcoin Core RPC</span>
+  <span class="tech"> Supabase</span>
+  <span class="tech">Polar</span>
+</div>
+          </div>
+         
+        </div>
+      </div>
+ <div class="project-card">
+        <div class="project-thumb">🐍
+          <span class="project-badge">Coming Soon</span>
+        </div>
+        <div class="project-body">
+          <h3>Python Automation Scripts</h3>
+          <p>A collection of Python scripts for automating everyday tasks — file management, data processing, and web scraping.</p>
+          <div class="project-stack">
+            <span>Python</span><span>CLI</span><span>Automation</span>
+          </div>
+        
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── EDUCATION & ACHIEVEMENTS ───────────────────── -->
+<section id="education">
+  <div class="section-inner">
+    <div class="section-label">My journey</div>
+    <h2 class="section-title">Education &amp; Achievements</h2>
+    <div class="timeline">
+
+      <div class="timeline-item">
+        <div class="timeline-icon edu">🎓</div>
+        <div class="timeline-content">
+          <h3>Adama Science and Technology University</h3>
+          <div class="sub">Computer Science · Current Student</div>
+          <p>Recognized by the university for outstanding academic performance with <strong>Great Distinction</strong>. Actively exploring software development, AI, and cybersecurity alongside core studies.</p>
+          <span class="timeline-year">2025 — Present</span>
+        </div>
+      </div>
+
+      <div class="timeline-item">
+        <div class="timeline-icon award">🏆</div>
+        <div class="timeline-content">
+          <h3>High School Excellence Award</h3>
+          <div class="sub">Ethiopian National Examination</div>
+          <p>Awarded by high school for achieving an excellent score on the Ethiopian National Exam — a testament to years of dedication and academic discipline.</p>
+          <span class="timeline-year">2025</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ── CONTACT ─────────────────────────────────────── -->
+<section class="contact-section" id="contact">
+  <div class="section-inner">
+    <div class="section-label">Get in touch</div>
+    <h2 class="section-title">Let's build something together</h2>
+    <div class="contact-grid">
+
+      <div class="contact-info">
+        <p>I'm open to collaborations, internships, and exciting projects. Whether you have a great idea or just want to say hello — my inbox is always open.</p>
+        <div class="contact-links">
+          <a href="mailto:dagipeacu@gmail.com" class="contact-link">
+            <div class="contact-link-icon">✉</div>
+            dagipeacu@gmail.com
+          </a>
+          <a href="https://github.com/DagmawiZelelew" target="_blank" rel="noopener" class="contact-link">
+            <div class="contact-link-icon">gh</div>
+            github.com/DagmawiZelelew
+          </a>
+          <a href="https://www.linkedin.com/in/dagmawi-zelelew" target="_blank" rel="noopener" class="contact-link">
+            <div class="contact-link-icon">in</div>
+            linkedin.com/in/dagmawi-zelelew
+          </a>
+        </div>
+      </div>
+
+      <div>
+        <div class="cform">
+          <input  type="text"  id="cf-name"  placeholder="Your name" />
+          <input  type="email" id="cf-email" placeholder="Your email" />
+          <textarea id="cf-msg" placeholder="Your message…"></textarea>
+          <button class="btn-send" onclick="sendMsg()">Send message →</button>
+          <div class="form-success" id="form-success">✓ Message sent! I'll get back to you soon.</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ── FOOTER ──────────────────────────────────────── -->
+<footer>
+  <p>© 2025 Dagmawi Zelelew Argaw · Built with HTML, CSS &amp; care.</p>
+  <div class="footer-links">
+    <a href="https://github.com/DagmawiZelelew" target="_blank" rel="noopener">GitHub</a>
+    <a href="https://www.linkedin.com/in/dagmawi-zelelew" target="_blank" rel="noopener">LinkedIn</a>
+    <a href="mailto:dagipeacu@gmail.com">Email</a>
+  </div>
+</footer>
+<script
+const observer = new IntersectionObserver((entries)=>{
+
+entries.forEach(entry=>{
+
+if(entry.isIntersecting){
+
+entry.target.style.opacity="1";
+entry.target.style.transform="translateY(0)";
+
+}
+
+});
+
+},{
+threshold:.15
+});
+
+document.querySelectorAll(
+".skill-cat,.project-card,.timeline-item,.about-text,.contact-grid"
+).forEach(el=>{
+
+el.style.opacity="0";
+el.style.transform="translateY(60px)";
+el.style.transition="all .8s ease";
+
+observer.observe(el);
+</script>
+});
+</body>
+</html>

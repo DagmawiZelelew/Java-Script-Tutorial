@@ -1,0 +1,822 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>BlogSpace</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.44.0/tabler-icons.min.css" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --surface-0: #f5f5f3;
+      --surface-1: #ebebea;
+      --surface-2: #ffffff;
+      --text-primary: #1a1a18;
+      --text-secondary: #5c5c58;
+      --text-muted: #9a9a94;
+      --border: rgba(0,0,0,0.1);
+      --border-strong: rgba(0,0,0,0.18);
+      --border-accent: #2563eb;
+      --bg-accent: #eff6ff;
+      --text-accent: #1d4ed8;
+      --border-danger: #fca5a5;
+      --bg-danger: #fef2f2;
+      --text-danger: #b91c1c;
+      --bg-success: #f0fdf4;
+      --text-success: #15803d;
+      --border-success: #86efac;
+      --radius: 8px;
+      --font-sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --surface-0: #1a1a18;
+        --surface-1: #242422;
+        --surface-2: #2e2e2c;
+        --text-primary: #f0f0ec;
+        --text-secondary: #a8a8a0;
+        --text-muted: #68685e;
+        --border: rgba(255,255,255,0.1);
+        --border-strong: rgba(255,255,255,0.18);
+        --bg-accent: #1e3a5f;
+        --text-accent: #93c5fd;
+        --border-danger: #7f1d1d;
+        --bg-danger: #2d0a0a;
+        --text-danger: #fca5a5;
+        --bg-success: #052e16;
+        --text-success: #86efac;
+        --border-success: #166534;
+      }
+    }
+
+    body {
+      font-family: var(--font-sans);
+      background: var(--surface-0);
+      color: var(--text-primary);
+      min-height: 100vh;
+      line-height: 1.6;
+    }
+
+    /* ── Layout ─────────────────────────────────── */
+    .app { max-width: 900px; margin: 0 auto; padding: 0 1.25rem; }
+
+    /* ── Nav ────────────────────────────────────── */
+    .nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1rem 0;
+      border-bottom: .5px solid var(--border);
+      margin-bottom: 2rem;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+    .nav-brand {
+      font-size: 1.1rem;
+      font-weight: 500;
+      color: var(--text-primary);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      text-decoration: none;
+    }
+    .nav-brand span {
+      width: 28px; height: 28px;
+      background: #4a7c59;
+      border-radius: 6px;
+      display: flex; align-items: center; justify-content: center;
+      color: #fff;
+      font-size: 13px; font-weight: 500;
+    }
+    .nav-right { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+
+    /* ── Buttons ────────────────────────────────── */
+    .btn {
+      padding: 6px 14px;
+      border-radius: var(--radius);
+      font-size: 13px;
+      cursor: pointer;
+      font-weight: 400;
+      border: .5px solid var(--border-strong);
+      background: transparent;
+      color: var(--text-primary);
+      transition: background .15s;
+      font-family: inherit;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+    }
+    .btn:hover { background: var(--surface-1); }
+    .btn:disabled { opacity: .45; cursor: not-allowed; }
+    .btn-primary { background: #4a7c59; color: #fff; border-color: #4a7c59; }
+    .btn-primary:hover { background: #3d6b4c; border-color: #3d6b4c; }
+    .btn-danger { background: var(--bg-danger); color: var(--text-danger); border-color: var(--border-danger); }
+    .btn-danger:hover { opacity: .85; }
+    .btn-sm { padding: 4px 10px; font-size: 12px; }
+
+    /* ── Avatar / User chip ─────────────────────── */
+    .avatar {
+      width: 28px; height: 28px;
+      border-radius: 50%;
+      background: #4a7c59;
+      color: #fff;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 11px; font-weight: 500;
+      flex-shrink: 0;
+    }
+    .avatar.sm { width: 22px; height: 22px; font-size: 10px; }
+    .user-chip { display: flex; align-items: center; gap: 6px; font-size: 13px; color: var(--text-secondary); }
+
+    /* ── Form elements ──────────────────────────── */
+    input, textarea, select {
+      width: 100%;
+      padding: 8px 12px;
+      border: .5px solid var(--border-strong);
+      border-radius: var(--radius);
+      background: var(--surface-2);
+      color: var(--text-primary);
+      font-size: 14px;
+      font-family: inherit;
+      transition: border-color .15s;
+    }
+    input:focus, textarea:focus { outline: none; border-color: #4a7c59; }
+    textarea { resize: vertical; line-height: 1.6; }
+    label { font-size: 13px; color: var(--text-secondary); display: block; margin-bottom: 4px; }
+    .field { margin-bottom: 1rem; }
+    .char-count { font-size: 11px; color: var(--text-muted); text-align: right; margin-top: 2px; }
+
+    /* ── Auth form card ─────────────────────────── */
+    .form-card {
+      background: var(--surface-2);
+      border: .5px solid var(--border);
+      border-radius: 12px;
+      padding: 1.5rem;
+      max-width: 440px;
+      margin: 0 auto;
+    }
+    .form-card h2 { font-size: 18px; font-weight: 500; margin-bottom: 1.25rem; }
+    .form-footer { margin-top: .75rem; font-size: 13px; color: var(--text-secondary); text-align: center; }
+    .form-footer a { color: #4a7c59; cursor: pointer; text-decoration: none; }
+    .error-msg {
+      font-size: 12px;
+      color: var(--text-danger);
+      background: var(--bg-danger);
+      border: .5px solid var(--border-danger);
+      padding: 6px 10px;
+      border-radius: var(--radius);
+    }
+    .demo-hint {
+      background: var(--bg-success);
+      border: .5px solid var(--border-success);
+      border-radius: var(--radius);
+      padding: 8px 12px;
+      margin-bottom: 1rem;
+      font-size: 12px;
+      color: var(--text-success);
+    }
+    .demo-hint a { cursor: pointer; color: var(--text-success); text-decoration: underline; margin-right: 6px; }
+
+    /* ── Stats bar ──────────────────────────────── */
+    .stats-row { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 1.5rem; }
+    .stat-card { background: var(--surface-1); border-radius: var(--radius); padding: .75rem 1rem; flex: 1; min-width: 80px; }
+    .stat-card .n { font-size: 22px; font-weight: 500; }
+    .stat-card .l { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
+
+    /* ── Page header ────────────────────────────── */
+    .page-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 1.25rem;
+      flex-wrap: wrap;
+      gap: .5rem;
+    }
+    .page-header h2 { font-size: 20px; font-weight: 500; }
+
+    /* ── Filter bar ─────────────────────────────── */
+    .filter-bar { display: flex; align-items: center; gap: 8px; margin-bottom: 1.25rem; flex-wrap: wrap; }
+    .filter-bar input { max-width: 260px; flex: 1; }
+
+    /* ── Post cards (feed) ──────────────────────── */
+    .posts-grid { display: grid; gap: 1rem; }
+    .post-card {
+      background: var(--surface-2);
+      border: .5px solid var(--border);
+      border-radius: 12px;
+      padding: 1.25rem 1.5rem;
+      cursor: pointer;
+      transition: border-color .15s;
+    }
+    .post-card:hover { border-color: var(--border-strong); }
+    .post-card h3 { font-size: 16px; font-weight: 500; margin-bottom: .4rem; line-height: 1.4; }
+    .excerpt {
+      font-size: 13px;
+      color: var(--text-secondary);
+      line-height: 1.6;
+      margin-bottom: .75rem;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+    .post-meta { display: flex; align-items: center; gap: 8px; font-size: 12px; color: var(--text-muted); flex-wrap: wrap; }
+
+    /* ── Tags ───────────────────────────────────── */
+    .post-tags { display: flex; gap: 4px; flex-wrap: wrap; margin-bottom: .6rem; }
+    .tag {
+      font-size: 11px;
+      padding: 2px 8px;
+      border-radius: 12px;
+      background: var(--bg-success);
+      color: var(--text-success);
+      border: .5px solid var(--border-success);
+    }
+
+    /* ── Full post view ─────────────────────────── */
+    .post-full { max-width: 700px; margin: 0 auto; }
+    .post-header { margin-bottom: 2rem; }
+    .post-header h1 { font-size: 26px; font-weight: 500; line-height: 1.3; margin-bottom: .75rem; }
+    .meta-row { display: flex; align-items: center; gap: .75rem; flex-wrap: wrap; margin-bottom: .75rem; }
+    .post-body { font-size: 15px; line-height: 1.8; color: var(--text-primary); white-space: pre-wrap; word-break: break-word; }
+    .actions-row { display: flex; gap: 6px; flex-wrap: wrap; align-items: center; }
+    .divider { height: .5px; background: var(--border); margin: 2rem 0; }
+
+    /* ── Comments ───────────────────────────────── */
+    .comments-section h3 { font-size: 16px; font-weight: 500; margin-bottom: 1.25rem; }
+    .comment-form {
+      background: var(--surface-1);
+      border: .5px solid var(--border);
+      border-radius: 12px;
+      padding: 1rem;
+      margin-bottom: 1.5rem;
+    }
+    .comments-list { display: grid; gap: .75rem; }
+    .comment-card {
+      background: var(--surface-2);
+      border: .5px solid var(--border);
+      border-radius: 12px;
+      padding: 1rem 1.25rem;
+    }
+    .comment-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: .5rem; }
+    .comment-author { display: flex; align-items: center; gap: 8px; font-size: 13px; }
+    .comment-date { font-size: 11px; color: var(--text-muted); margin-left: 4px; }
+    .comment-body { font-size: 14px; line-height: 1.6; color: var(--text-secondary); }
+
+    /* ── Back button ────────────────────────────── */
+    .back-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 13px;
+      color: var(--text-secondary);
+      cursor: pointer;
+      margin-bottom: 1.25rem;
+      border: none;
+      background: none;
+      font-family: inherit;
+      padding: 0;
+    }
+    .back-btn:hover { color: var(--text-primary); }
+
+    /* ── Empty state ────────────────────────────── */
+    .empty-state { text-align: center; padding: 3rem 1rem; color: var(--text-secondary); }
+    .empty-state i { font-size: 36px; display: block; margin-bottom: .75rem; color: var(--text-muted); }
+
+    /* ── CTA banner ─────────────────────────────── */
+    .cta-banner {
+      margin-top: 2.5rem;
+      padding: 1.5rem;
+      background: var(--surface-1);
+      border-radius: 12px;
+      border: .5px solid var(--border);
+      text-align: center;
+    }
+    .cta-banner p:first-child { font-weight: 500; margin-bottom: .4rem; }
+    .cta-banner p:last-of-type { font-size: 13px; color: var(--text-secondary); margin-bottom: 1rem; }
+    .cta-banner .btn-row { display: flex; gap: 8px; justify-content: center; }
+
+    /* ── Read time ──────────────────────────────── */
+    .read-time { display: flex; align-items: center; gap: 4px; }
+  </style>
+</head>
+<body>
+<div id="root"></div>
+
+<script>
+const { useState } = React;
+
+/* ── Seed data ────────────────────────────────────── */
+const INIT_USERS = [
+  { id: 'u1', username: 'alice', email: 'alice@example.com', password: 'password123' },
+  { id: 'u2', username: 'bob',   email: 'bob@example.com',   password: 'password123' },
+];
+
+const INIT_POSTS = [
+  {
+    id: 'p1',
+    title: 'Getting started with React Hooks',
+    content: `React Hooks revolutionized how we write functional components. With useState, useEffect, and custom hooks, we can manage state and side effects without ever needing class components.
+
+The most fundamental hook is useState. It lets you add state to functional components with a clean, simple API. You call it with an initial value and it returns a pair — the current state value and a function to update it.
+
+useEffect is equally powerful. It replaces componentDidMount, componentDidUpdate, and componentWillUnmount all in one. By controlling the dependency array, you decide when the effect re-runs.
+
+Custom hooks are where the real magic lives. Any function that starts with "use" and calls other hooks is a custom hook. This lets you extract and reuse stateful logic across components without any changes to your component hierarchy.`,
+    authorId: 'u1', authorName: 'alice',
+    createdAt: new Date(Date.now() - 86400000 * 3).toISOString(),
+    tags: ['React', 'JavaScript', 'Frontend'],
+    readTime: 4,
+  },
+  {
+    id: 'p2',
+    title: 'Building RESTful APIs with Node.js and Express',
+    content: `Express is the de facto standard for building REST APIs in Node.js. Its minimalist approach gives you the freedom to structure your application however you like, while still providing a robust set of features for web and mobile applications.
+
+A RESTful API should follow a few key principles. Resources are identified by URLs, and HTTP methods (GET, POST, PUT, DELETE) define the action to perform on those resources. Responses should be stateless and use appropriate HTTP status codes.
+
+Middleware is at the heart of Express. Every request flows through a chain of middleware functions before reaching your route handler. This is perfect for authentication, logging, validation, and error handling.
+
+For database integration, Mongoose makes working with MongoDB intuitive. It provides schema validation, query building, and model-level business logic that keeps your code organized and maintainable.`,
+    authorId: 'u2', authorName: 'bob',
+    createdAt: new Date(Date.now() - 86400000 * 1).toISOString(),
+    tags: ['Node.js', 'API', 'Backend'],
+    readTime: 5,
+  },
+];
+
+const INIT_COMMENTS = [
+  { id: 'c1', postId: 'p1', authorId: 'u2', authorName: 'bob',   content: 'Great overview! I especially love how custom hooks make code reuse so much cleaner compared to HOCs or render props.', createdAt: new Date(Date.now() - 86400000 * 2).toISOString() },
+  { id: 'c2', postId: 'p1', authorId: 'u1', authorName: 'alice', content: 'Thanks! Custom hooks were a game-changer for me too. The mental model becomes so much simpler.',                     createdAt: new Date(Date.now() - 86400000 * 1).toISOString() },
+  { id: 'c3', postId: 'p2', authorId: 'u1', authorName: 'alice', content: 'Excellent write-up. The middleware section is spot on — I always recommend handling auth there rather than in individual routes.', createdAt: new Date(Date.now() - 3600000 * 5).toISOString() },
+];
+
+/* ── Helpers ──────────────────────────────────────── */
+const genId    = () => Math.random().toString(36).slice(2, 9);
+const fmt      = (d) => new Date(d).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+const initials = (n) => n.slice(0, 2).toUpperCase();
+const calcRead = (c) => Math.max(1, Math.ceil(c.split(/\s+/).length / 200));
+const makeExcerpt = (c) => c.slice(0, 200).trim() + '…';
+
+/* ══════════════════════════════════════════════════
+   ROOT APP
+══════════════════════════════════════════════════ */
+function App() {
+  const [users,    setUsers]    = useState(INIT_USERS);
+  const [posts,    setPosts]    = useState(INIT_POSTS);
+  const [comments, setComments] = useState(INIT_COMMENTS);
+  const [user,     setUser]     = useState(null);
+  const [view,     setView]     = useState('home');   // home | login | register | post | create | edit
+  const [selPost,  setSelPost]  = useState(null);
+  const [editPost, setEditPost] = useState(null);
+  const [search,   setSearch]   = useState('');
+
+  /* Navigation helpers */
+  const goHome   = () => { setView('home');   setSelPost(null); setEditPost(null); setSearch(''); };
+  const goPost   = (p) => { setSelPost(p);    setView('post'); };
+  const goCreate = ()  => { setEditPost(null);setView('create'); };
+  const goEdit   = (p) => { setEditPost(p);   setView('edit'); };
+  const logout   = ()  => { setUser(null);    goHome(); };
+
+  /* Auth */
+  const register = (username, email, password) => {
+    if (users.find(u => u.email    === email))    return 'Email already registered.';
+    if (users.find(u => u.username === username)) return 'Username already taken.';
+    const nu = { id: genId(), username, email, password };
+    setUsers(p => [...p, nu]);
+    setUser(nu);
+    goHome();
+    return null;
+  };
+
+  const login = (email, password) => {
+    const u = users.find(u => u.email === email && u.password === password);
+    if (!u) return 'Invalid email or password.';
+    setUser(u);
+    goHome();
+    return null;
+  };
+
+  /* Post CRUD */
+  const createPost = (title, content, tags) => {
+    const np = {
+      id: genId(), title, content,
+      excerpt: makeExcerpt(content),
+      authorId: user.id, authorName: user.username,
+      createdAt: new Date().toISOString(),
+      tags, readTime: calcRead(content),
+    };
+    setPosts(p => [np, ...p]);
+    setSelPost(np);
+    setView('post');
+  };
+
+  const updatePost = (id, title, content, tags) => {
+    const updated = { title, content, excerpt: makeExcerpt(content), tags, readTime: calcRead(content), updatedAt: new Date().toISOString() };
+    setPosts(p => p.map(x => x.id === id ? { ...x, ...updated } : x));
+    setSelPost(prev => ({ ...prev, ...updated }));
+    setView('post');
+  };
+
+  const deletePost = (id) => {
+    setPosts(p => p.filter(x => x.id !== id));
+    setComments(c => c.filter(x => x.postId !== id));
+    goHome();
+  };
+
+  /* Comments */
+  const addComment = (postId, content) => {
+    setComments(c => [...c, { id: genId(), postId, authorId: user.id, authorName: user.username, content, createdAt: new Date().toISOString() }]);
+  };
+  const deleteComment = (id) => setComments(c => c.filter(x => x.id !== id));
+
+  /* Derived */
+  const filtered = posts.filter(p =>
+    !search || (p.title + p.content + p.authorName + p.tags.join(' ')).toLowerCase().includes(search.toLowerCase())
+  );
+  const myPostCount   = posts.filter(p => user && p.authorId === user.id).length;
+  const totalComments = comments.length;
+
+  /* Route */
+  if (view === 'login')    return React.createElement(LoginView,    { onLogin: login, onSwitch: () => setView('register'), onBack: goHome });
+  if (view === 'register') return React.createElement(RegisterView, { onRegister: register, onSwitch: () => setView('login'), onBack: goHome });
+  if (view === 'create')   return React.createElement(PostForm,     { key: 'create', post: null, onSubmit: createPost, onBack: goHome });
+  if (view === 'edit' && editPost)
+    return React.createElement(PostForm, { key: 'edit', post: editPost, onSubmit: updatePost, onBack: () => setView('post') });
+  if (view === 'post' && selPost) {
+    const fresh = posts.find(x => x.id === selPost.id) || selPost;
+    return React.createElement(PostView, {
+      post: fresh,
+      comments: comments.filter(c => c.postId === fresh.id),
+      user, onBack: goHome, onEdit: () => goEdit(fresh),
+      onDelete: () => deletePost(fresh.id),
+      onAddComment: addComment, onDeleteComment: deleteComment,
+    });
+  }
+  return React.createElement(HomeView, {
+    posts: filtered, allPosts: posts, user, search,
+    onSearch: setSearch, onPost: goPost, onCreate: goCreate,
+    onLogin: () => setView('login'), onRegister: () => setView('register'),
+    onLogout: logout, myPostCount, totalComments,
+  });
+}
+
+/* ══════════════════════════════════════════════════
+   NAV
+══════════════════════════════════════════════════ */
+function Nav({ user, onLogin, onRegister, onLogout, onHome, onCreate }) {
+  return React.createElement('nav', { className: 'nav' },
+    React.createElement('div', { className: 'nav-brand', onClick: onHome },
+      React.createElement('span', null, 'B'),
+      'BlogSpace'
+    ),
+    React.createElement('div', { className: 'nav-right' },
+      user ? [
+        React.createElement('div', { className: 'user-chip', key: 'chip' },
+          React.createElement('div', { className: 'avatar' }, initials(user.username)),
+          React.createElement('span', null, user.username)
+        ),
+        onCreate && React.createElement('button', { className: 'btn btn-primary btn-sm', key: 'write', onClick: onCreate },
+          React.createElement('i', { className: 'ti ti-edit', 'aria-hidden': 'true' }),
+          ' Write'
+        ),
+        React.createElement('button', { className: 'btn btn-sm', key: 'out', onClick: onLogout }, 'Sign out'),
+      ] : [
+        React.createElement('button', { className: 'btn btn-sm', key: 'li', onClick: onLogin }, 'Sign in'),
+        React.createElement('button', { className: 'btn btn-primary btn-sm', key: 'reg', onClick: onRegister }, 'Sign up'),
+      ]
+    )
+  );
+}
+
+/* ══════════════════════════════════════════════════
+   HOME VIEW
+══════════════════════════════════════════════════ */
+function HomeView({ posts, allPosts, user, search, onSearch, onPost, onCreate, onLogin, onRegister, onLogout, myPostCount, totalComments }) {
+  return React.createElement('div', null,
+    React.createElement(Nav, { user, onLogin, onRegister, onLogout, onHome: () => {}, onCreate }),
+    React.createElement('div', { className: 'app' },
+      user && React.createElement('div', { className: 'stats-row' },
+        React.createElement('div', { className: 'stat-card' }, React.createElement('div', { className: 'n' }, allPosts.length), React.createElement('div', { className: 'l' }, 'Total posts')),
+        React.createElement('div', { className: 'stat-card' }, React.createElement('div', { className: 'n' }, myPostCount),   React.createElement('div', { className: 'l' }, 'Your posts')),
+        React.createElement('div', { className: 'stat-card' }, React.createElement('div', { className: 'n' }, totalComments), React.createElement('div', { className: 'l' }, 'Comments')),
+      ),
+      React.createElement('div', { className: 'page-header' },
+        React.createElement('h2', null, 'All posts'),
+        user && React.createElement('button', { className: 'btn btn-primary', onClick: onCreate },
+          React.createElement('i', { className: 'ti ti-plus', 'aria-hidden': 'true' }),
+          ' New post'
+        )
+      ),
+      React.createElement('div', { className: 'filter-bar' },
+        React.createElement('input', { type: 'text', placeholder: 'Search posts…', value: search, onChange: e => onSearch(e.target.value) }),
+        search && React.createElement('button', { className: 'btn btn-sm', onClick: () => onSearch('') }, 'Clear')
+      ),
+      posts.length === 0
+        ? React.createElement('div', { className: 'empty-state' },
+            React.createElement('i', { className: 'ti ti-article' }),
+            React.createElement('p', null, search ? 'No posts match your search.' : 'No posts yet. Be the first to write one!'),
+            !user && React.createElement('p', { style: { marginTop: '.5rem', fontSize: '13px' } },
+              React.createElement('a', { style: { color: '#4a7c59', cursor: 'pointer' }, onClick: onRegister }, 'Sign up'),
+              ' to start writing.'
+            )
+          )
+        : React.createElement('div', { className: 'posts-grid' },
+            ...posts.map(p => React.createElement(PostCard, { key: p.id, post: p, onClick: () => onPost(p) }))
+          ),
+      !user && React.createElement('div', { className: 'cta-banner' },
+        React.createElement('p', null, 'Join the conversation'),
+        React.createElement('p', null, 'Create an account to write posts and comment.'),
+        React.createElement('div', { className: 'btn-row' },
+          React.createElement('button', { className: 'btn', onClick: onLogin }, 'Sign in'),
+          React.createElement('button', { className: 'btn btn-primary', onClick: onRegister }, 'Sign up')
+        )
+      )
+    )
+  );
+}
+
+/* ══════════════════════════════════════════════════
+   POST CARD (feed item)
+══════════════════════════════════════════════════ */
+function PostCard({ post, onClick }) {
+  return React.createElement('div', { className: 'post-card', onClick },
+    post.tags.length > 0 && React.createElement('div', { className: 'post-tags' },
+      ...post.tags.slice(0, 3).map(t => React.createElement('span', { className: 'tag', key: t }, t))
+    ),
+    React.createElement('h3', null, post.title),
+    React.createElement('p', { className: 'excerpt' }, post.excerpt || post.content.slice(0, 200) + '…'),
+    React.createElement('div', { className: 'post-meta' },
+      React.createElement('div', { className: 'avatar sm' }, initials(post.authorName)),
+      React.createElement('span', null, post.authorName),
+      React.createElement('span', null, '·'),
+      React.createElement('span', null, fmt(post.createdAt)),
+      React.createElement('span', null, '·'),
+      React.createElement('span', { className: 'read-time' },
+        React.createElement('i', { className: 'ti ti-clock', 'aria-hidden': 'true', style: { fontSize: '11px' } }),
+        ` ${post.readTime} min read`
+      )
+    )
+  );
+}
+
+/* ══════════════════════════════════════════════════
+   POST DETAIL VIEW
+══════════════════════════════════════════════════ */
+function PostView({ post, comments, user, onBack, onEdit, onDelete, onAddComment, onDeleteComment }) {
+  const [commentText, setCommentText] = useState('');
+  const [confirmDel,  setConfirmDel]  = useState(false);
+  const canEdit = user && user.id === post.authorId;
+
+  const submitComment = () => {
+    if (!commentText.trim()) return;
+    onAddComment(post.id, commentText.trim());
+    setCommentText('');
+  };
+
+  return React.createElement('div', null,
+    React.createElement(Nav, { user, onHome: onBack }),
+    React.createElement('div', { className: 'app' },
+      React.createElement('button', { className: 'back-btn', onClick: onBack },
+        React.createElement('i', { className: 'ti ti-arrow-left', 'aria-hidden': 'true' }),
+        ' Back to all posts'
+      ),
+      React.createElement('div', { className: 'post-full' },
+        /* Header */
+        React.createElement('div', { className: 'post-header' },
+          post.tags.length > 0 && React.createElement('div', { className: 'post-tags', style: { marginBottom: '.75rem' } },
+            ...post.tags.map(t => React.createElement('span', { className: 'tag', key: t }, t))
+          ),
+          React.createElement('h1', null, post.title),
+          React.createElement('div', { className: 'meta-row' },
+            React.createElement('div', { className: 'avatar' }, initials(post.authorName)),
+            React.createElement('span', { style: { fontSize: '14px' } }, post.authorName),
+            React.createElement('span', { style: { color: 'var(--text-muted)', fontSize: '13px' } }, '·'),
+            React.createElement('span', { style: { fontSize: '13px', color: 'var(--text-muted)' } }, fmt(post.createdAt)),
+            post.updatedAt && React.createElement('span', { style: { fontSize: '12px', color: 'var(--text-muted)' } }, '(edited)'),
+            React.createElement('span', { style: { color: 'var(--text-muted)', fontSize: '13px' } }, '·'),
+            React.createElement('span', { style: { fontSize: '13px', color: 'var(--text-muted)', display: 'flex', alignItems: 'center', gap: '3px' } },
+              React.createElement('i', { className: 'ti ti-clock', 'aria-hidden': 'true' }),
+              ` ${post.readTime} min read`
+            )
+          ),
+          canEdit && React.createElement('div', { className: 'actions-row' },
+            React.createElement('button', { className: 'btn btn-sm', onClick: onEdit },
+              React.createElement('i', { className: 'ti ti-edit', 'aria-hidden': 'true' }),
+              ' Edit'
+            ),
+            confirmDel
+              ? React.createElement('div', { style: { display: 'flex', alignItems: 'center', gap: '6px', flexWrap: 'wrap' } },
+                  React.createElement('span', { style: { fontSize: '12px', color: 'var(--text-danger)' } }, 'Delete this post?'),
+                  React.createElement('button', { className: 'btn btn-sm btn-danger', onClick: onDelete }, 'Yes, delete'),
+                  React.createElement('button', { className: 'btn btn-sm', onClick: () => setConfirmDel(false) }, 'Cancel')
+                )
+              : React.createElement('button', { className: 'btn btn-sm btn-danger', onClick: () => setConfirmDel(true) },
+                  React.createElement('i', { className: 'ti ti-trash', 'aria-hidden': 'true' }),
+                  ' Delete'
+                )
+          )
+        ),
+
+        /* Body */
+        React.createElement('div', { className: 'post-body' }, post.content),
+        React.createElement('div', { className: 'divider' }),
+
+        /* Comments */
+        React.createElement('div', { className: 'comments-section' },
+          React.createElement('h3', null, `${comments.length} comment${comments.length !== 1 ? 's' : ''}`),
+
+          user
+            ? React.createElement('div', { className: 'comment-form' },
+                React.createElement('div', { style: { display: 'flex', gap: '8px', alignItems: 'flex-start' } },
+                  React.createElement('div', { className: 'avatar', style: { marginTop: '2px' } }, initials(user.username)),
+                  React.createElement('div', { style: { flex: 1 } },
+                    React.createElement('textarea', {
+                      rows: 3,
+                      placeholder: 'Share your thoughts…',
+                      value: commentText,
+                      onChange: e => setCommentText(e.target.value),
+                    }),
+                    React.createElement('div', { style: { display: 'flex', justifyContent: 'flex-end', marginTop: '6px' } },
+                      React.createElement('button', { className: 'btn btn-primary btn-sm', onClick: submitComment, disabled: !commentText.trim() }, 'Post comment')
+                    )
+                  )
+                )
+              )
+            : React.createElement('p', { style: { fontSize: '13px', color: 'var(--text-secondary)', padding: '1rem', background: 'var(--surface-1)', borderRadius: 'var(--radius)' } },
+                'Sign in to leave a comment.'
+              ),
+
+          comments.length > 0 && React.createElement('div', { className: 'comments-list', style: { marginTop: '1rem' } },
+            ...comments.map(c =>
+              React.createElement('div', { className: 'comment-card', key: c.id },
+                React.createElement('div', { className: 'comment-header' },
+                  React.createElement('div', { className: 'comment-author' },
+                    React.createElement('div', { className: 'avatar sm' }, initials(c.authorName)),
+                    React.createElement('span', null, c.authorName),
+                    React.createElement('span', { className: 'comment-date' }, fmt(c.createdAt))
+                  ),
+                  user && user.id === c.authorId &&
+                    React.createElement('button', { className: 'btn btn-sm btn-danger', onClick: () => onDeleteComment(c.id) },
+                      React.createElement('i', { className: 'ti ti-trash', 'aria-hidden': 'true' })
+                    )
+                ),
+                React.createElement('p', { className: 'comment-body' }, c.content)
+              )
+            )
+          )
+        )
+      )
+    )
+  );
+}
+
+/* ══════════════════════════════════════════════════
+   POST FORM (create & edit)
+══════════════════════════════════════════════════ */
+function PostForm({ post, onSubmit, onBack }) {
+  const [title,   setTitle]   = useState(post ? post.title : '');
+  const [content, setContent] = useState(post ? post.content : '');
+  const [tagsStr, setTagsStr] = useState(post ? post.tags.join(', ') : '');
+  const [err,     setErr]     = useState('');
+
+  const submit = () => {
+    if (!title.trim())   { setErr('Title is required.');   return; }
+    if (!content.trim()) { setErr('Content is required.'); return; }
+    const tags = tagsStr.split(',').map(t => t.trim()).filter(Boolean);
+    post ? onSubmit(post.id, title.trim(), content.trim(), tags)
+         : onSubmit(title.trim(), content.trim(), tags);
+  };
+
+  const wordCount = content.split(/\s+/).filter(Boolean).length;
+
+  return React.createElement('div', null,
+    React.createElement(Nav, { user: null, onHome: onBack }),
+    React.createElement('div', { className: 'app' },
+      React.createElement('button', { className: 'back-btn', onClick: onBack },
+        React.createElement('i', { className: 'ti ti-arrow-left', 'aria-hidden': 'true' }),
+        ' Back'
+      ),
+      React.createElement('div', { style: { maxWidth: '700px', margin: '0 auto' } },
+        React.createElement('div', { className: 'page-header' },
+          React.createElement('h2', null, post ? 'Edit post' : 'New post')
+        ),
+        err && React.createElement('div', { className: 'error-msg', style: { marginBottom: '1rem' } }, err),
+        React.createElement('div', { className: 'field' },
+          React.createElement('label', null, 'Title'),
+          React.createElement('input', { type: 'text', value: title, onChange: e => setTitle(e.target.value), placeholder: 'Give your post a title…' })
+        ),
+        React.createElement('div', { className: 'field' },
+          React.createElement('label', null, 'Tags'),
+          React.createElement('input', { type: 'text', value: tagsStr, onChange: e => setTagsStr(e.target.value), placeholder: 'React, JavaScript, Tutorial (comma-separated)' })
+        ),
+        React.createElement('div', { className: 'field' },
+          React.createElement('label', null, 'Content'),
+          React.createElement('textarea', { rows: 20, value: content, onChange: e => setContent(e.target.value), placeholder: 'Write your post here…' }),
+          React.createElement('div', { className: 'char-count' }, `${wordCount} words · ~${calcRead(content)} min read`)
+        ),
+        React.createElement('div', { style: { display: 'flex', gap: '8px', justifyContent: 'flex-end' } },
+          React.createElement('button', { className: 'btn', onClick: onBack }, 'Cancel'),
+          React.createElement('button', { className: 'btn btn-primary', onClick: submit }, post ? 'Save changes' : 'Publish post')
+        )
+      )
+    )
+  );
+}
+
+/* ══════════════════════════════════════════════════
+   LOGIN VIEW
+══════════════════════════════════════════════════ */
+function LoginView({ onLogin, onSwitch, onBack }) {
+  const [email,    setEmail]    = useState('');
+  const [password, setPassword] = useState('');
+  const [err,      setErr]      = useState('');
+
+  const submit = () => { const e = onLogin(email, password); if (e) setErr(e); };
+  const fill   = (u) => { setEmail(u.email); setPassword(u.password); setErr(''); };
+
+  return React.createElement('div', null,
+    React.createElement(Nav, { user: null, onHome: onBack }),
+    React.createElement('div', { className: 'app' },
+      React.createElement('div', { className: 'form-card' },
+        React.createElement('h2', null, 'Sign in'),
+        err && React.createElement('div', { className: 'error-msg', style: { marginBottom: '1rem' } }, err),
+        React.createElement('div', { className: 'demo-hint' },
+          React.createElement('strong', null, 'Demo accounts: '),
+          React.createElement('a', { onClick: () => fill(INIT_USERS[0]) }, 'alice'),
+          React.createElement('a', { onClick: () => fill(INIT_USERS[1]) }, 'bob'),
+          ' (password: password123)'
+        ),
+        React.createElement('div', { className: 'field' },
+          React.createElement('label', null, 'Email'),
+          React.createElement('input', { type: 'email', value: email, onChange: e => setEmail(e.target.value), placeholder: 'you@example.com' })
+        ),
+        React.createElement('div', { className: 'field' },
+          React.createElement('label', null, 'Password'),
+          React.createElement('input', { type: 'password', value: password, onChange: e => setPassword(e.target.value), placeholder: '••••••••', onKeyDown: e => e.key === 'Enter' && submit() })
+        ),
+        React.createElement('button', { className: 'btn btn-primary', style: { width: '100%' }, onClick: submit }, 'Sign in'),
+        React.createElement('div', { className: 'form-footer' },
+          "Don't have an account? ",
+          React.createElement('a', { onClick: onSwitch }, 'Sign up')
+        )
+      )
+    )
+  );
+}
+
+/* ══════════════════════════════════════════════════
+   REGISTER VIEW
+══════════════════════════════════════════════════ */
+function RegisterView({ onRegister, onSwitch, onBack }) {
+  const [username, setUsername] = useState('');
+  const [email,    setEmail]    = useState('');
+  const [password, setPassword] = useState('');
+  const [err,      setErr]      = useState('');
+
+  const submit = () => {
+    if (username.length < 3)  { setErr('Username must be at least 3 characters.'); return; }
+    if (!email.includes('@'))  { setErr('Please enter a valid email.');             return; }
+    if (password.length < 6)  { setErr('Password must be at least 6 characters.'); return; }
+    const e = onRegister(username, email, password);
+    if (e) setErr(e);
+  };
+
+  return React.createElement('div', null,
+    React.createElement(Nav, { user: null, onHome: onBack }),
+    React.createElement('div', { className: 'app' },
+      React.createElement('div', { className: 'form-card' },
+        React.createElement('h2', null, 'Create account'),
+        err && React.createElement('div', { className: 'error-msg', style: { marginBottom: '1rem' } }, err),
+        React.createElement('div', { className: 'field' },
+          React.createElement('label', null, 'Username'),
+          React.createElement('input', { type: 'text', value: username, onChange: e => setUsername(e.target.value), placeholder: 'yourname' })
+        ),
+        React.createElement('div', { className: 'field' },
+          React.createElement('label', null, 'Email'),
+          React.createElement('input', { type: 'email', value: email, onChange: e => setEmail(e.target.value), placeholder: 'you@example.com' })
+        ),
+        React.createElement('div', { className: 'field' },
+          React.createElement('label', null, 'Password'),
+          React.createElement('input', { type: 'password', value: password, onChange: e => setPassword(e.target.value), placeholder: 'Min. 6 characters', onKeyDown: e => e.key === 'Enter' && submit() })
+        ),
+        React.createElement('button', { className: 'btn btn-primary', style: { width: '100%' }, onClick: submit }, 'Create account'),
+        React.createElement('div', { className: 'form-footer' },
+          'Already have an account? ',
+          React.createElement('a', { onClick: onSwitch }, 'Sign in')
+        )
+      )
+    )
+  );
+}
+
+/* ── Mount ───────────────────────────────────────── */
+const root = ReactDOM.createRoot(document.getElementById('root'));
+root.render(React.createElement(App));
+</script>
+</body>
+</html>
